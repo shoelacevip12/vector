@@ -1,0 +1,18 @@
+---
+- name: Перезапустить Vector
+  systemd:
+    name: vector
+    state: restarted
+    enabled: true
+    masked: false
+    daemon_reload: true
+  listen: "Перезапустить Vector"
+  tags: [service, vector]
+
+- name: Перезагрузить systemd и перезапустить Vector
+  systemd:
+    daemon_reload: true
+  notify: Перезапустить Vector
+  listen: "Перезагрузить systemd и перезапустить Vector"
+  tags: [service, vector]
+...
