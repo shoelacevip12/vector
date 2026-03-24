@@ -1,0 +1,42 @@
+---
+- name: Установка для загрузки Vector
+  apt:
+    name:
+      - curl
+      - ca-certificates
+    update_cache: true
+
+- name: Скачать Vector tar.gz
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.54.0/vector-0.54.0-x86_64-unknown-linux-gnu.tar.gz"
+    dest: "/tmp/vector-install.tar.gz"
+    mode: '0644'
+    
+- name: Распаковать Vector в /opt
+  unarchive:
+    src: /tmp/vector-install.tar.gz
+    dest: /opt
+    remote_src: true
+    creates: /opt/vector-x86_64-unknown-linux-gnu
+
+- name: Создать symlink
+  file:
+    src: /opt/vector-x86_64-unknown-linux-gnu/bin/vector
+    dest: /usr/bin/vector
+    state: link
+    force: true
+
+# - name: Установить systemd unit-файл
+#   copy:
+#     src: /opt/vector-x86_64-unknown-linux-gnu/etc/systemd/vector.service
+#     dest: /etc/systemd/system/vector.service
+#     mode: '0644'
+#     owner: root
+#     group: root
+#     remote_src: true
+
+# - name: Очистить временные файлы
+#   file:
+#     path: /tmp/vector-install.tar.gz
+#     state: absent
+...

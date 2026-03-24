@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Применить тестируемую роль
+      include_role:
+        name: "vector"
+...

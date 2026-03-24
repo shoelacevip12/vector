@@ -1,0 +1,36 @@
+---
+vector_config:
+  sources:
+    var_logs:
+      host_key: hostname
+      include: ["/var/log/syslog", "/var/log/*.log"]
+      line_delimiter: '\n'
+      read_from: beginning
+      rotate_wait_secs: 9223372
+      type: file
+      data_dir: /var/lib/vector/
+      file_key: file
+      glob_minimum_cooldown_ms: 1000
+      ignore_older_secs: 600
+      max_line_bytes: 102400
+      max_read_bytes: 2048
+
+  sinks:
+    var_logs_clickhouse:
+      type: clickhouse
+      inputs: [var_logs]
+      database: skvvectordb
+      endpoint: http://192.168.89.100:8123
+      table: mytable
+      auth:
+        strategy: basic
+        user: skv
+        password: 'test1qaz'
+      compression: gzip
+      format: json_each_row
+      skip_unknown_fields: true
+      buffer:
+        - type: disk
+          max_size: 1073741824 # 1GiB.
+          when_full: drop_newest
+...

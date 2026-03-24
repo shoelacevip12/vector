@@ -1,0 +1,39 @@
+---
+- name: Директория для конфигурации Vector datadog
+  file:
+    path: /etc/vector
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Директория для дискового буФЕРА Vector datadog
+  file:
+    path: "{{ vector_config.sources.var_logs.data_dir }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  ignore_errors: false
+
+- name: Первое Развертывание из шаблона
+  template:
+    src: vector.yaml.j2
+    dest: /etc/vector/vector.yaml
+    mode: '0640'
+    owner: root
+    group: root
+  notify: Перезапустить Vector
+
+- name: Повторное Развертывание из шаблона с валидацией
+  template:
+    src: vector.yaml.j2
+    dest: /etc/vector/vector.yaml
+    mode: '0640'
+    owner: root
+    group: root
+    backup: true
+    validate: /usr/bin/vector validate --no-environment %s
+  notify: Перезапустить Vector
+  when: vector_config_validated | default(false)
+...

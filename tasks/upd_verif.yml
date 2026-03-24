@@ -1,0 +1,16 @@
+---
+- name: Проверка статуса службы Vector
+  systemd:
+    name: vector
+
+- name: Проверка конфигурации Vector (валидация)
+  command: /usr/bin/vector validate /etc/vector/vector.yaml
+  register: vector_validate
+  changed_when: false
+  failed_when: vector_validate.rc != 0
+
+- name: Результат валидации конфига
+  debug:
+    msg: "Конфигурация Vector валидна"
+  when: vector_validate.rc == 0
+...

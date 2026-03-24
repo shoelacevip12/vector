@@ -1,0 +1,28 @@
+---
+- name: Create
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Создание образов
+      community.docker.docker_image:
+        name: "{{ item.image }}"
+        build:
+          path: "{{ molecule_scenario_directory }}"
+          dockerfile: "{{ item.dockerfile }}"
+        source: build
+      loop: "{{ molecule_yml.platforms }}"
+
+    - name: Создание контейнеров
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        image: "{{ item.image }}"
+        state: started
+        command: "{{ item.command }}"
+        privileged: "{{ item.privileged }}"
+        volumes: "{{ item.volumes }}"
+        tmpfs: "{{ item.tmpfs }}"
+        cgroupns_mode: "{{ item.cgroupns_mode }}"
+        detach: true
+      loop: "{{ molecule_yml.platforms }}"
+...

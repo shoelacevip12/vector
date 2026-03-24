@@ -1,0 +1,39 @@
+---
+- name: Проверка роли vector
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Проверка наличия исполняемого файла
+      stat:
+        path: /usr/bin/vector
+      register: bin_stat
+
+    - name: Подтверждение наличия исполняемого файла vector
+      assert:
+        that:
+          - bin_stat.stat.exists
+        fail_msg: "Vector binary not found at /usr/bin/vector"
+
+    - name: Существует ли конфигурация vector
+      stat:
+        path: /etc/vector/vector.yaml
+      register: cfg_stat
+
+    - name: Подтверждение наличия vector config
+      assert:
+        that:
+          - cfg_stat.stat.exists
+          - cfg_stat.stat.size | int > 0
+        fail_msg: "Vector config /etc/vector/vector.yaml missing or empty"
+
+    - name: Проверка синтаксиса конфигурации vector
+      command: /usr/bin/vector validate /etc/vector/vector.yaml
+      register: validate_result
+      changed_when: false
+      failed_when: false
+
+    - name: Вывод проверки результата
+      debug:
+        msg: "Valid = {{ 'yes' if validate_result.rc == 0 else 'no' }} (rc={{ validate_result.rc }})"
+...

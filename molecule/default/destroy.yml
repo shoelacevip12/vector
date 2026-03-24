@@ -1,0 +1,21 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Уничтожение контейнера
+      community.docker.docker_container:
+        name: "{{ item.name }}"
+        state: absent
+        force_kill: true
+      loop: "{{ molecule_yml.platforms }}"
+  
+    - name: Удаление Образов
+      community.docker.docker_image:
+        name: "{{ item.image }}"
+        state: absent
+        force_absent: true
+      loop: "{{ molecule_yml.platforms }}"
+      ignore_errors: true
+...
