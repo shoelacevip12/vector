@@ -1,0 +1,18 @@
+---
+- name: Создать systemd unit-файл для Vector
+  template:
+    src: vector.service.j2
+    dest: /etc/systemd/system/vector.service
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Перезагрузить systemd и перезапустить Vector
+
+- name: Активировать и запустить службу Vector
+  systemd:
+    name: vector
+    state: started
+    enabled: true
+    masked: false
+    daemon_reload: true
+...

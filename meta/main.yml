@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: shoelacevip12
+  description: Установка и настройка Vector datadog
+  company: Independent
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions: [noble]
+  galaxy_tags: [monitoring, logging, vector, observability, clickhouse]
+dependencies: []
+...

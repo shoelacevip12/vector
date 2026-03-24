@@ -1,0 +1,21 @@
+---
+- name: Обновление и установка основных пакетов
+  include_tasks:
+    file: upd_inst.yml
+  tags: [install, vector]
+
+- name: Обновление и создание необходимых каталогов и файлов
+  include_tasks:
+    file: upd_dir.yml
+  tags: [config, vector]
+
+- name: Запуск службы
+  include_tasks:
+    file: upd_serv.yml
+  tags: [service, vector]
+
+- name: Проверки Vector
+  include_tasks:
+    file: upd_verif.yml
+  tags: [verify, vector]
+...
