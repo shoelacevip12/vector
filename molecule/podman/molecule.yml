@@ -1,0 +1,29 @@
+---
+driver:
+  name: podman
+
+platforms:
+  - name: ubuntu
+    image: docker.io/pycontribs/ubuntu:latest
+    command: /bin/sh -c "while true; do sleep 3600; done"
+ 
+provisioner:
+  name: ansible
+  ansible_args:
+    - --skip-tags=service,verify
+  config_options:
+    defaults:
+      remote_tmp: /tmp
+  inventory:
+    host_vars:
+      ubuntu:
+        ansible_user: root
+        ansible_connection: containers.podman.podman
+        ansible_python_interpreter: /usr/bin/python3
+  playbooks:
+    converge: ../default/converge.yml
+    verify: ../default/verify.yml
+
+verifier:
+  name: ansible
+...

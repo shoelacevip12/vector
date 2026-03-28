@@ -1,0 +1,28 @@
+# Игнорировать всю папку:
+cache/
+.vagrant/
+__pycache__/
+mysql_D/
+master/db/
+slave/db/
+.terraform/
+collections/
+galaxy_cache/
+tmp/
+.vscode/
+.venv/
+.tox/
+
+# игнорировать расширения и файлы:
+*.deb
+authorized_key.json
+.terraform.lock.hcl
+tfplan
+terraform.tfstate
+terraform.tfstate.backup
+cloud-init.yml
+.terraform.*
+personal.auto.tfvars
+
+# Исключения
+!9_*/cloud-init.yml
